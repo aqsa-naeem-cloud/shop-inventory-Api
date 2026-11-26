@@ -2,6 +2,7 @@ package com.example.inventory.service;
 import com.example.inventory.dto.CategoryRequest;
 import com.example.inventory.dto.CategoryResponse;
 import com.example.inventory.entity.Category;
+import com.example.inventory.exception.ResourceNotFoundException;
 import com.example.inventory.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,13 @@ public class CategoryService {
                 .stream()
                 .map(cat -> new CategoryResponse(cat.getId(), cat.getName()))
                 .toList();
+    }
+    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+
+        category.setName(request.name());
+        Category updated = categoryRepository.save(category);
+        return new CategoryResponse(updated.getId(), updated.getName());
     }
 }
