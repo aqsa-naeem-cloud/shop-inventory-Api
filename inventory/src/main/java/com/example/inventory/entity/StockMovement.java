@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @Entity
-@Table(name="Stockmovements")
-public class Stockmove {
+@Table(name="StockMovements")
+public class StockMovement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      private long id;
@@ -26,5 +26,6 @@ public class Stockmove {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MovementType type;
-
+    public StockMovement() {
+    }
 }

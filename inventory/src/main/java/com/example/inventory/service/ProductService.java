@@ -23,7 +23,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    // 1. Add Product
+
     public ProductResponse createProduct(ProductRequest request) {
         // BUSINESS RULE: SKU must be unique
         if (productRepository.existsBySku(request.sku())) {
@@ -45,13 +45,13 @@ public class ProductService {
         return mapToResponse(saved);
     }
 
-    // 2. Get Paginated List
+
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
                 .map(this::mapToResponse);
     }
 
-    // 3. Get Product by ID
+
     public ProductResponse getProductById(Long id) {
         // BUSINESS RULE: Product not found -> throw ProductNotFoundException
         Product product = productRepository.findById(id)
@@ -65,7 +65,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
 
-        // BUSINESS RULE: Update name, price, minStock (NOT quantity)
+
         product.setName(request.name());
         product.setPrice(request.price());
         product.setMinStock(request.minStock());
@@ -74,7 +74,6 @@ public class ProductService {
         return mapToResponse(updated);
     }
 
-    // 5. Delete Product
     public void deleteProduct(Long id) {
         // BUSINESS RULE: Product not found -> throw ProductNotFoundException
         Product product = productRepository.findById(id)
@@ -82,7 +81,7 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    // 6. Search by Name
+
     public List<ProductResponse> searchProducts(String name) {
         return productRepository.findByNameContainingIgnoreCase(name)
                 .stream()
@@ -90,7 +89,7 @@ public class ProductService {
                 .toList();
     }
 
-    // 7. Low Stock Products
+
     public List<ProductResponse> getLowStockProducts() {
         return productRepository.findLowStockProducts()
                 .stream()
@@ -98,7 +97,7 @@ public class ProductService {
                 .toList();
     }
 
-    // Helper: Entity ko DTO mein convert karne ke liye
+
     private ProductResponse mapToResponse(Product product) {
         boolean isLowStock = product.getQuantity() < product.getMinStock();
         return new ProductResponse(
